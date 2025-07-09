@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Pulse - College Event Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --text: #e2e8f0;
+            --bg: #0f172a;
+        }
+
+        .light-mode {
+            --primary: #4f46e5;
+            --secondary: #7c3aed;
+            --accent: #db2777;
+            --text: #1e293b;
+            --bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateY(-5px);
+        }
+
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .theme-btn {
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 8px currentColor);
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="relative min-h-screen">
+    <!-- 3D Background -->
+    <div id="scene-container"></div>
+
+    <!-- Floating Particles -->
+    <div id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="p-4 flex justify-between items-center bg-opacity-80 backdrop-blur-md">
+        <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xl floating">
+                NP
+            </div>
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
+                Neon Pulse
+            </h1>
+        </div>
+        <div class="flex items-center space-x-6">
+            <button id="theme-toggle" class="theme-btn w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></button>
+            <button class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium hover:opacity-90 transition-all">
+                Login
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-10">
+        <!-- Hero Section -->
+        <section class="flex flex-col md:flex-row items-center justify-between mb-16">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
+                    Revolutionize Your Campus Events
+                </h1>
+                <p class="text-xl mb-8">
+                    The ultimate platform for managing college clubs, events, and student engagement with immersive 3D visualization.
+                </p>
+                <div class="flex space-x-4">
+                    <button class="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium hover:scale-105 transition-transform pulse-animation">
+                        Get Started
+                    </button>
+                    <button class="px-6 py-3 rounded-full border-2 border-purple-500 text-purple-400 font-medium hover:bg-purple-500 hover:text-white transition-all">
+                        Explore Events
+                    </button>
+                </div>
+            </div>
+            <div class="md:w-1/2 relative">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/59bf85b7-b3f8-4b22-8f31-6b140f9a2c71.png" alt="3D rendered university campus with animated event spots and floating digital interfaces" class="rounded-xl shadow-2xl w-full card-3d" />
+                <div class="absolute -bottom-5 -right-5 w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-xl opacity-50"></div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-12 text-center">Powerful Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-800 bg-opacity-40 p-6 rounded-xl backdrop-blur-md card-3d">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Event Creation</h3>
+                    <p class="text-gray-300">Easily create and manage events with our intuitive 3D interface and powerful tools.</p>
+                </div>
+                <div class="bg-gray-800 bg-opacity-40 p-6 rounded-xl backdrop-blur-md card-3d">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Club Management</h3>
+                    <p class="text-gray-300">Organize your student clubs with member management, announcements, and event coordination.</p>
+                </div>
+                <div class="bg-gray-800 bg-opacity-40 p-6 rounded-xl backdrop-blur-md card-3d">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Registration</h3>
+                    <p class="text-gray-300">Streamline event registration with QR codes, digital tickets, and attendance tracking.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Clubs Section -->
+        <section class="mb-20">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">Popular Clubs</h2>
+                <button class="px-4 py-2 rounded-full border border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white transition-all">
+                    View All
+                </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="clubs-container">
+                <!-- Clubs will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section class="mb-20">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">Upcoming Events</h2>
+                <div class="flex space-x-4">
+                    <button onclick="prevEvents()" class="p-2 rounded-full border border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <button onclick="nextEvents()" class="p-2 rounded-full border border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="overflow-hidden">
+                    <div class="flex transition-transform duration-300 ease-in-out" id="events-carousel">
+                        <!-- Events will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Panel (Simulated) -->
+        <section class="bg-gray-800 bg-opacity-40 p-8 rounded-xl backdrop-blur-md mb-16">
+            <h2 class="text-3xl font-bold mb-6">Event Management Dashboard</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Create New Event</h3>
+                    <form id="event-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Event Name</label>
+                            <input type="text" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-purple-500 focus:ring-purple-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Date & Time</label>
+                            <input type="datetime-local" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-purple-500 focus:ring-purple-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Description</label>
+                            <textarea class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-purple-500 focus:ring-purple-500" rows="3" required></textarea>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium hover:opacity-90 transition-all">
+                                Create Event
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Statistics</h3>
+                    <div class="bg-gray-900 bg-opacity-50 p-6 rounded-lg">
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <div class="text-3xl font-bold text-purple-400">24</div>
+                                <div class="text-sm text-gray-400">Upcoming Events</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl font-bold text-pink-400">1560</div>
+                                <div class="text-sm text-gray-400">Total Registrations</div>
+                            </div>
+                        </div>
+                        <div class="h-40 flex items-end space-x-2">
+                            <div class="w-8 h-1/4 bg-purple-500 rounded-t-sm animate-grow"></div>
+                            <div class="w-8 h-1/3 bg-purple-400 rounded-t-sm animate-grow" style="animation-delay: 0.1s;"></div>
+                            <div class="w-8 h-1/2 bg-purple-300 rounded-t-sm animate-grow" style="animation-delay: 0.2s;"></div>
+                            <div class="w-8 h-3/4 bg-purple-500 rounded-t-sm animate-grow" style="animation-delay: 0.3s;"></div>
+                            <div class="w-8 h-full bg-purple-400 rounded-t-sm animate-grow" style="animation-delay: 0.4s;"></div>
+                            <div class="w-8 h-3/4 bg-purple-300 rounded-t-sm animate-grow" style="animation-delay: 0.5s;"></div>
+                            <div class="w-8 h-1/2 bg-purple-500 rounded-t-sm animate-grow" style="animation-delay: 0.6s;"></div>
+                        </div>
+                        <style>
+                            @keyframes grow {
+                                from { height: 0; }
+                                to { height: 100%; }
+                            }
+                            .animate-grow {
+                                animation: grow 1s ease-out forwards;
+                            }
+                        </style>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 bg-opacity-60 py-10">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
+                            NP
+                        </div>
+                        <span class="text-xl font-bold">Neon Pulse</span>
+                    </div>
+                    <p class="text-gray-400 max-w-md">
+                        The next-generation platform for college event management with immersive 3D visualization and powerful organizational tools.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">Home</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">Events</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">Clubs</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">About</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">Help Center</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">Privacy Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Connect</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-purple-400 hover:bg-gray-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                                </svg>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-purple-400 hover:bg-gray-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                                </svg>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-purple-400 hover:bg-gray-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+                <p>� 2023 Neon Pulse. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            if (document.body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'light' || 
+            (window.matchMedia('(prefers-color-scheme: light)').matches && !localStorage.getItem('theme'))) {
+            document.body.classList.add('light-mode');
+        }
+
+        // Initialize 3D Scene
+        function init3DScene() {
+            const container = document.getElementById('scene-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create a galaxy of floating objects
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCnt = 500;
+            
+            const posArray = new Float32Array(particlesCnt * 3);
+            for(let i = 0; i < particlesCnt * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 10;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.02,
+                color: 0x8b5cf6,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            
+            camera.position.z = 5;
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                particlesMesh.rotation.x += 0.0005;
+                particlesMesh.rotation.y += 0.001;
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // Mouse Particle Effect
+        function initMouseParticles() {
+            const container = document.getElementById('particles');
+            const colors = ['#8b5cf6', '#ec4899', '#6366f1'];
+            
+            document.addEventListener('mousemove', (e) => {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = `${Math.random() * 8 + 2}px`;
+                particle.style.height = particle.style.width;
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = `${e.pageX}px`;
+                particle.style.top = `${e.pageY}px`;
+                
+                container.appendChild(particle);
+                
+                gsap.to(particle, {
+                    x: (Math.random() - 0.5) * 100,
+                    y:
